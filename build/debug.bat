@@ -1,2 +1,2 @@
 mingw32-make debug
-bellum.exe
+start bellum.exe

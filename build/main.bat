@@ -1,2 +1,2 @@
 mingw32-make main
-bellum.exe
+start bellum.exe
