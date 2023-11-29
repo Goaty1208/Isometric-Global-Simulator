@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile with Makefile: Debug",
+            "type": "shell",
+            "command": "cd build ; mingw32-make debug ; start bellum.exe"
+        },
+        {
+            "label": "Compile with Makefile: Main",
+            "type": "shell",
+            "command": "cd build ; mingw32-make main ; start bellum.exe"
+        }
+        
+        
+    ]
+}
