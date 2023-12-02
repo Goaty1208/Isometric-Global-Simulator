@@ -145,7 +145,7 @@ int main(){
 
             EndMode2D();
 
-             DrawFPS(1,1);
+            DrawFPS(1,1);
    
         EndDrawing();
 
