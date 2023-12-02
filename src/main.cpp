@@ -17,7 +17,23 @@ const int tileHeight = 32;
 
 //----------------------------------------
 
+//Map sizes ------------------------------
+const int mapSize = 256;
+const int mapSizeMedium = 1024;
+const int mapSizeLarge = 2048;
+const int mapSizeExtra = 4096;
+//----------------------------------------
 
+
+//Isometric coordinate converter for tiles.
+Vector2 isometricToScreenTiles(Vector2 isoPosition) {
+    Vector2 screenPosition;
+    screenPosition.x = (isoPosition.x - isoPosition.y) * (tileWidth * i_y);
+    screenPosition.y = (isoPosition.x + isoPosition.y) * (tileHeight * j_y);
+    return screenPosition;
+}
+
+//Isometric coordinate converter.
 Vector2 isometricToScreen(Vector2 isoPosition) {
     Vector2 screenPosition;
     screenPosition.x = (isoPosition.x - isoPosition.y) * (tileWidth * i_y);
@@ -36,7 +52,6 @@ int main(){
     Image grass = LoadImage("graphics/tiles/grass.png");
     Texture2D grassTexture = LoadTextureFromImage(grass);
 
-    int mapSize = 90;
     
     SetTargetFPS(60);
 
@@ -83,7 +98,7 @@ int main(){
             for (int i = 0; i < mapSize; i++) { //Tile drawing. Pretty damn primitive
                 for (int j = 0; j < mapSize; j++) {
                     Vector2 tilePosition = { static_cast<float>(i), static_cast<float>(j) };
-                    Vector2 screenPosition = isometricToScreen(tilePosition);
+                    Vector2 screenPosition = isometricToScreenTiles(tilePosition);
                     DrawTexture(grassTexture, screenPosition.x, screenPosition.y, WHITE);
                 }
             }
@@ -101,4 +116,3 @@ int main(){
 
     return 0;
 }
-
