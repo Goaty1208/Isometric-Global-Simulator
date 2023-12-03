@@ -78,12 +78,6 @@ Vector2 screenToIsometricTiles(Vector2 isoPosition) {
     return screenPosition;
 }
 
-int readPerlinMap(Image image, int i, int j){
-
-    Color colour = GetImageColor(image, i, j);
-    
-}
-
 void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize){
     for (int i = 0; i < drawSize; i++) { //Tile drawing. Pretty damn primitive
         for (int j = 0; j < drawSize; j++) {
@@ -98,12 +92,48 @@ void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize){
             case water:
                 DrawTexture(waterTexture, screenPosition.x, screenPosition.y, WHITE);
                 break;
+            default:
+                DrawTexture(waterTexture, screenPosition.x, screenPosition.y, WHITE);
+                break;
             }
                         
         }
     }    
 
 }
+
+//What in the C++ is this shit -----------------------
+int** generateMap(int mapSize, Image perlinMap) {
+
+    int** map = new int*[mapSize];
+
+    for (int i = 0; i < mapSize; ++i) {
+
+        map[i] = new int[mapSize];
+
+        for (int j = 0; j < mapSize; ++j) {
+
+            //Funky magic shite
+            map[i][j] = ColorToInt(GetImageColor(perlinMap, i, j));
+        }
+    }
+
+
+
+    return map;
+}
+
+//I like memory leaks. Note: this function must use the same map size as the size of the map it wants to delete, as otherwise things might very well explode.
+void delete2DIntArray(int** map, int mapSize) {
+    for (int i = 0; i < mapSize; ++i) {
+
+        delete[] map[i];
+    }
+
+    delete[] map;
+}
+
+//----------------------------------------------------
 
 int main(){
     
@@ -116,12 +146,7 @@ int main(){
     Texture2D grassTexture = LoadTextureFromImage(grass);
     Image water = LoadImage("graphics/tiles/water.png");
     Texture2D waterTexture = LoadTextureFromImage(water);
-
     Image perlinNoise = GenImagePerlinNoise(mapDebug, mapDebug, 1, 1, 1.0f);
-    Texture2D perlin = LoadTextureFromImage(perlinNoise);
-
-    
-
     
     SetTargetFPS(60);
 
@@ -188,8 +213,7 @@ int main(){
             ClearBackground(BLACK);
             BeginMode2D(camera);
             
-            DrawTexture(perlin, 0, 0, WHITE);
-            // drawMap(grassTexture, waterTexture, mapDebug);
+            drawMap(grassTexture, waterTexture, mapDebug);
 
             EndMode2D();
 
