@@ -69,6 +69,7 @@ Vector2 isometricToScreen(Vector2 isoPosition) {
 }
 
 //Screen coordinate to isometric converter for tiles.
+//TODO: Implement. Yeah, this shit doesn't work yet.
 Vector2 screenToIsometricTiles(Vector2 isoPosition) {
     Vector2 screenPosition;
     screenPosition.x = (isoPosition.x - isoPosition.y) * (tileWidth * i_y);
@@ -179,7 +180,7 @@ int main(){
 
             EndMode2D();
 
-             DrawFPS(1,1);
+            DrawFPS(1,1);
    
         EndDrawing();
 
