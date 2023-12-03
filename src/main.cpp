@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include <iostream>
+#include <vector>
 
 //Resolution thingies---------------------
 const unsigned int windowHeight = 600;
@@ -22,12 +23,34 @@ const int tileHeight = 32;
 //----------------------------------------
 
 //Map sizes ------------------------------
+const int mapDebug = 10;
 const int mapSize = 256;
 const int mapSizeMedium = 1024;
 const int mapSizeLarge = 2048;
 const int mapSizeExtra = 4096;
 //----------------------------------------
 
+
+enum tileIDs{
+    
+    water = 0,
+    grass = 1
+
+};
+
+
+int mapTiles[mapDebug][mapDebug]{
+    {0,0,0,0,0,0,0,0,0,0},
+    {0,1,1,1,0,1,1,0,1,0},
+    {0,1,1,1,0,0,1,1,1,0},
+    {0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,1,1,0,0,0,0},
+    {0,0,1,1,1,1,0,0,0,0},
+    {0,0,0,1,0,1,1,0,0,0},
+    {0,0,0,1,0,0,1,0,0,0},
+    {0,0,0,0,1,1,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0}
+} ;
 
 //Isometric coordinate to screen converter for tiles.
 Vector2 isometricToScreenTiles(Vector2 isoPosition) {
@@ -53,27 +76,38 @@ Vector2 screenToIsometricTiles(Vector2 isoPosition) {
     return screenPosition;
 }
 
-void drawMap(Texture2D texture){
-    for (int i = 0; i < mapSize; i++) { //Tile drawing. Pretty damn primitive
-        for (int j = 0; j < mapSize; j++) {
+void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize){
+    for (int i = 0; i < drawSize; i++) { //Tile drawing. Pretty damn primitive
+        for (int j = 0; j < drawSize; j++) {
             Vector2 tilePosition = { static_cast<float>(i), static_cast<float>(j) };
             Vector2 screenPosition = isometricToScreenTiles(tilePosition);
-            DrawTexture(texture, screenPosition.x, screenPosition.y, WHITE);
+            switch (mapTiles[i][j])
+            {
+            case grass:
+                DrawTexture(grassTexture, screenPosition.x, screenPosition.y, WHITE);
+                break;
+            
+            case water:
+                DrawTexture(waterTexture, screenPosition.x, screenPosition.y, WHITE);
+                break;
+            }
+                        
         }
     }    
 
 }
-
 
 int main(){
     
     Camera2D camera = { 0 };
     camera.zoom = 1.0f;
 
-    InitWindow(windowWidth, windowHeight, "Et Erat Bellum - 0.0.0.0.0.0.0.5");
+    InitWindow(windowWidth, windowHeight, "Et Erat Bellum - 0.0.0.0.0.0.0.6");
 
     Image grass = LoadImage("graphics/tiles/grass.png");
     Texture2D grassTexture = LoadTextureFromImage(grass);
+    Image water = LoadImage("graphics/tiles/water.png");
+    Texture2D waterTexture = LoadTextureFromImage(water);
 
     
     SetTargetFPS(60);
@@ -141,7 +175,7 @@ int main(){
             ClearBackground(BLACK);
             BeginMode2D(camera);
             
-            drawMap(grassTexture);
+            drawMap(grassTexture, waterTexture, mapDebug);
 
             EndMode2D();
 
@@ -149,14 +183,12 @@ int main(){
    
         EndDrawing();
 
-        // Check for screenshot request. Overwrites the default path.
-        if (IsKeyPressed(KEY_F12)) {
-            
-        }
     }
     
     UnloadTexture(grassTexture);
     UnloadImage(grass);
+    UnloadTexture(waterTexture);
+    UnloadImage(water);
     CloseWindow();
 
     return 0;
