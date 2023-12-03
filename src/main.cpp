@@ -39,6 +39,7 @@ enum tileIDs{
 };
 
 
+
 int mapTiles[mapDebug][mapDebug]{
     {0,0,0,0,0,0,0,0,0,0},
     {0,1,1,1,0,1,1,0,1,0},
@@ -77,6 +78,12 @@ Vector2 screenToIsometricTiles(Vector2 isoPosition) {
     return screenPosition;
 }
 
+int readPerlinMap(Image image, int i, int j){
+
+    Color colour = GetImageColor(image, i, j);
+    
+}
+
 void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize){
     for (int i = 0; i < drawSize; i++) { //Tile drawing. Pretty damn primitive
         for (int j = 0; j < drawSize; j++) {
@@ -109,6 +116,11 @@ int main(){
     Texture2D grassTexture = LoadTextureFromImage(grass);
     Image water = LoadImage("graphics/tiles/water.png");
     Texture2D waterTexture = LoadTextureFromImage(water);
+
+    Image perlinNoise = GenImagePerlinNoise(mapDebug, mapDebug, 1, 1, 1.0f);
+    Texture2D perlin = LoadTextureFromImage(perlinNoise);
+
+    
 
     
     SetTargetFPS(60);
@@ -176,7 +188,8 @@ int main(){
             ClearBackground(BLACK);
             BeginMode2D(camera);
             
-            drawMap(grassTexture, waterTexture, mapDebug);
+            DrawTexture(perlin, 0, 0, WHITE);
+            // drawMap(grassTexture, waterTexture, mapDebug);
 
             EndMode2D();
 
@@ -190,6 +203,9 @@ int main(){
     UnloadImage(grass);
     UnloadTexture(waterTexture);
     UnloadImage(water);
+
+    UnloadImage(perlinNoise);
+
     CloseWindow();
 
     return 0;
