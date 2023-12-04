@@ -1,2 +1,2 @@
 mingw32-make main
-start bellum.exe
+start igsMain.exe

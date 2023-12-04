@@ -4,12 +4,12 @@
         {
             "label": "Compile with Makefile: Debug",
             "type": "shell",
-            "command": "cd build ; mingw32-make debug ; start bellum.exe"
+            "command": "cd build ; mingw32-make debug ; start igsMain.exe"
         },
         {
             "label": "Compile with Makefile: Main",
             "type": "shell",
-            "command": "cd build ; mingw32-make main ; start bellum.exe"
+            "command": "cd build ; mingw32-make main ; start igsMain.exe"
         }
         
         
