@@ -1,57 +1,9 @@
 #include "raylib.h"
 #include "raymath.h"
-#include <iostream>
-#include <vector>
 
-//Resolution thingies---------------------
-const unsigned int windowHeight = 600;
-const unsigned int windowWidth = 600;
-int display = GetCurrentMonitor();
-//----------------------------------------
+#include "mapGeneration.hpp"
+#include "mapArithmetics.hpp"
 
-//Conversion rates------------------------
-const float i_y = 0.5f;
-const float j_y = 0.5f;
-//Tile heights and widths. Standard-------
-
-
-//NOTE: These values should NOT change, regardless of any zooming factor
-
-const int tileWidth = 64;       
-const int tileHeight = 32;      
-
-//----------------------------------------
-
-//Map sizes ------------------------------
-const int mapDebug = 10;
-const int mapSize = 256;
-const int mapSizeMedium = 1024;
-const int mapSizeLarge = 2048;
-const int mapSizeExtra = 4096;
-//----------------------------------------
-
-
-enum tileIDs{
-    
-    water = 0,
-    grass = 1
-
-};
-
-
-
-int mapTiles[mapDebug][mapDebug]{
-    {0,0,0,0,0,0,0,0,0,0},
-    {0,1,1,1,0,1,1,0,1,0},
-    {0,1,1,1,0,0,1,1,1,0},
-    {0,0,0,0,0,0,0,0,0,0},
-    {0,0,1,1,1,1,0,0,0,0},
-    {0,0,1,1,1,1,0,0,0,0},
-    {0,0,0,1,0,1,1,0,0,0},
-    {0,0,0,1,0,0,1,0,0,0},
-    {0,0,0,0,1,1,1,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0}
-} ;
 
 //Isometric coordinate to screen converter for tiles.
 Vector2 isometricToScreenTiles(Vector2 isoPosition) {
@@ -78,12 +30,12 @@ Vector2 screenToIsometricTiles(Vector2 isoPosition) {
     return screenPosition;
 }
 
-void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize){
+void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int** map){
     for (int i = 0; i < drawSize; i++) { //Tile drawing. Pretty damn primitive
         for (int j = 0; j < drawSize; j++) {
             Vector2 tilePosition = { static_cast<float>(i), static_cast<float>(j) };
             Vector2 screenPosition = isometricToScreenTiles(tilePosition);
-            switch (mapTiles[i][j])
+            switch (map[i][j])
             {
             case grass:
                 DrawTexture(grassTexture, screenPosition.x, screenPosition.y, WHITE);
@@ -103,7 +55,15 @@ void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize){
 }
 
 //What in the C++ is this shit -----------------------
-int** generateMap(int mapSize, Image perlinMap) {
+int** generateMap(int mapSize) {
+
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    float offsetX = static_cast<float>(rand()) / RAND_MAX * 1000.0f;
+    float offsetY = static_cast<float>(rand()) / RAND_MAX * 1000.0f;
+    float scale = static_cast<float>(rand()) / RAND_MAX * 8.0f;
+
+    Image perlinNoise = GenImagePerlinNoise(mapDebug, mapDebug, offsetX, offsetY, scale);
 
     int** map = new int*[mapSize];
 
@@ -114,11 +74,18 @@ int** generateMap(int mapSize, Image perlinMap) {
         for (int j = 0; j < mapSize; ++j) {
 
             //Funky magic shite
-            map[i][j] = ColorToInt(GetImageColor(perlinMap, i, j));
+            Color pixelColor = GetImageColor(perlinNoise, i, j);
+
+            // Normalize the color values to a range suitable for your tile IDs
+            float normalizedValue = (pixelColor.r + pixelColor.g + pixelColor.b) / (3.0f * 255.0f);
+            std::cout << "Normalized Value at (" << i << ", " << j << "): " << normalizedValue << std::endl;
+
+            // Assign grass or water based on a threshold
+            map[i][j] = (normalizedValue < 0.5f) ? grass : water;
         }
     }
 
-
+        UnloadImage(perlinNoise);
 
     return map;
 }
@@ -140,13 +107,17 @@ int main(){
     Camera2D camera = { 0 };
     camera.zoom = 1.0f;
 
-    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.0.0.0.0.6");
+    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.0.0.0.0.8");
 
     Image grass = LoadImage("graphics/tiles/grass.png");
     Texture2D grassTexture = LoadTextureFromImage(grass);
     Image water = LoadImage("graphics/tiles/water.png");
     Texture2D waterTexture = LoadTextureFromImage(water);
-    Image perlinNoise = GenImagePerlinNoise(mapDebug, mapDebug, 1, 1, 1.0f);
+    
+
+    int** currentMap = new int*[mapSize];
+
+    currentMap = generateMap(mapDebug);
     
     SetTargetFPS(60);
 
@@ -213,7 +184,7 @@ int main(){
             ClearBackground(BLACK);
             BeginMode2D(camera);
             
-            drawMap(grassTexture, waterTexture, mapDebug);
+            drawMap(grassTexture, waterTexture, mapDebug, currentMap);
 
             EndMode2D();
 
@@ -223,12 +194,11 @@ int main(){
 
     }
     
+    delete2DIntArray(currentMap, mapDebug);
     UnloadTexture(grassTexture);
     UnloadImage(grass);
     UnloadTexture(waterTexture);
     UnloadImage(water);
-
-    UnloadImage(perlinNoise);
 
     CloseWindow();
 
