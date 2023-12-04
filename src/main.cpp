@@ -140,7 +140,7 @@ int main(){
     Camera2D camera = { 0 };
     camera.zoom = 1.0f;
 
-    InitWindow(windowWidth, windowHeight, "Et Erat Bellum - 0.0.0.0.0.0.0.6");
+    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.0.0.0.0.6");
 
     Image grass = LoadImage("graphics/tiles/grass.png");
     Texture2D grassTexture = LoadTextureFromImage(grass);
