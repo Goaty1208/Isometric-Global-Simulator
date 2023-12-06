@@ -82,6 +82,7 @@ Vector2 screenToIsometricTiles(Vector2 isoPosition) {
 }
 
 void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int** map){
+
     for (int i = 0; i < drawSize; i++) { //Tile drawing. Pretty damn primitive
         for (int j = 0; j < drawSize; j++) {
             Vector2 tilePosition = { static_cast<float>(i), static_cast<float>(j) };
@@ -163,5 +164,6 @@ float perlinGeneration(float x, float y) {
     // Interpolate top and bottom
     return (cubicInterpolation(ix0, ix1, sy) + 1.0f) / 2.0f;
 }
+//----------------------------------------------------------------------------------------
 
 #endif
