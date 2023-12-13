@@ -18,7 +18,7 @@ int main(){
     Texture2D waterTexture = LoadTextureFromImage(water);
     
 
-    int** currentMap = new int*[mapSize];
+    int** currentMap = new int*[mapDebug];
 
     currentMap = generateMap(mapDebug);
     
@@ -80,6 +80,18 @@ int main(){
             if (camera.zoom < zoomIncrement) camera.zoom = zoomIncrement;
         }
         //Camera ends --------------------------------------------------
+        Vector2 screenPosition = screenToIsometric(GetScreenToWorld2D(GetMousePosition(), camera));
+        Vector2 mousePos = GetMousePosition();
+        Vector2 screenPos = GetScreenToWorld2D(mousePos, camera);
+        Vector2 isoPos = screenToIsometric(screenPos);
+        std::cout << "Mouse: " << mousePos.x << ", " << mousePos.y << "\n";
+        std::cout << "Screen: " << screenPos.x << ", " << screenPos.y << "\n";
+        std::cout << "Isometric: " << isoPos.x << ", " << isoPos.y << "\n";    
+
+        if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+            std::cout << "Left Mouse Button Pressed\n";
+            updateMap(currentMap, screenPosition, mapDebug);
+        }
 
         //Draw segment.
         BeginDrawing();

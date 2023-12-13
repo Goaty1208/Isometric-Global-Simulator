@@ -1,5 +1,6 @@
 #include "raylib.h"
 
+#include <cmath>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -28,7 +29,7 @@ const int tileHeight = 32;
 //----------------------------------------
 
 //Map sizes ------------------------------
-const int mapDebug = 256;
+const int mapDebug = 16;
 const int mapSize = 256;
 const int mapSizeMedium = 1024;
 const int mapSizeLarge = 2048;
@@ -42,22 +43,8 @@ enum tileIDs{
 
 };
 
-int mapDebugTiles[mapDebug][mapDebug]{
-    {0,0,0,0,0,0,0,0,0,0},
-    {0,1,1,1,0,1,1,0,1,0},
-    {0,1,1,1,0,0,1,1,1,0},
-    {0,0,0,0,0,0,0,0,0,0},
-    {0,0,1,1,1,1,0,0,0,0},
-    {0,0,1,1,1,1,0,0,0,0},
-    {0,0,0,1,0,1,1,0,0,0},
-    {0,0,0,1,0,0,1,0,0,0},
-    {0,0,0,0,1,1,1,0,0,0},
-    {0,0,0,0,0,0,0,0,0,0}
-} ;
-
-
 //Isometric coordinate to screen converter for tiles.
-Vector2 isometricToScreenTiles(Vector2 isoPosition) {
+Vector2 isometricToScreenTiles(Vector3 isoPosition) {
     Vector2 screenPosition;
     screenPosition.x = (isoPosition.x - isoPosition.y) * (tileWidth * i_y);
     screenPosition.y = (isoPosition.x + isoPosition.y) * (tileHeight * j_y);
@@ -65,7 +52,7 @@ Vector2 isometricToScreenTiles(Vector2 isoPosition) {
 }
 
 //Isometric coordinate converter.
-Vector2 isometricToScreen(Vector2 isoPosition) {
+Vector2 isometricToScreen(Vector3 isoPosition) {
     Vector2 screenPosition;
     screenPosition.x = (isoPosition.x - isoPosition.y) * (tileWidth * i_y);
     screenPosition.y = (isoPosition.x + isoPosition.y) * (tileHeight * j_y);
@@ -73,19 +60,25 @@ Vector2 isometricToScreen(Vector2 isoPosition) {
 }
 
 //Screen coordinate to isometric converter for tiles.
-//TODO: Implement. Yeah, this shit doesn't work yet.
-Vector2 screenToIsometricTiles(Vector2 isoPosition) {
-    Vector2 screenPosition;
-    screenPosition.x = (isoPosition.x - isoPosition.y) * (tileWidth * i_y);
-    screenPosition.y = (isoPosition.x + isoPosition.y) * (tileHeight * j_y);
-    return screenPosition;
+Vector2 screenToIsometric(Vector2 screenPosition) {
+    Vector2 isoPosition;
+    isoPosition.x = (screenPosition.x / (tileWidth * 0.5f) + screenPosition.y / (tileHeight * 0.5f)) * 0.5f;
+    isoPosition.y = (screenPosition.y / (tileHeight * 0.5f) - (screenPosition.x / (tileWidth * 0.5f))) * 0.5f;
+    
+    // Round to the nearest whole values
+    isoPosition.x = static_cast<float>(std::round(isoPosition.x));
+    isoPosition.y = static_cast<float>(std::round(isoPosition.y) + 1);
+
+    return isoPosition;
 }
+
+
 
 void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int** map){
 
     for (int i = 0; i < drawSize; i++) { //Tile drawing. Pretty damn primitive
         for (int j = 0; j < drawSize; j++) {
-            Vector2 tilePosition = { static_cast<float>(i), static_cast<float>(j) };
+            Vector3 tilePosition = { static_cast<float>(i), static_cast<float>(j), static_cast<float>(map[i][j]) };
             Vector2 screenPosition = isometricToScreenTiles(tilePosition);
             switch (map[i][j])
             {
@@ -106,6 +99,29 @@ void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int**
 
 }
 
+void updateMap(int** map, Vector2 position, int mapSize){
+    int x = static_cast<int>(position.x);
+    int y = static_cast<int>(position.y);
+
+    // Check if the coordinates are within bounds before using them as indices
+    if (x >= 0 && x < mapSize && y >= 0 && y < mapSize) {
+        // Update map at the rounded coordinates
+        std::cout << "Before Update - map[" << x << "][" << y << "] = " << map[x][y] << "\n";
+        switch (map[x][y])
+        {
+        case 1:
+            map[x - 1][y - 1] = 0;
+            break;
+        case 0:
+            map[x - 1][y - 1] = 1;
+            break;
+        }
+        std::cout << "After Update - map[" << x << "][" << y << "] = " << map[x][y] << "\n";
+    }
+}
+
+
+
 //Perlin Noise Generator -----------------------------------------------------------------
 Vector2 randomGradient(int ix, int iy) {
     const unsigned w = 8 * sizeof(unsigned);
@@ -122,8 +138,8 @@ Vector2 randomGradient(int ix, int iy) {
 
     // Create the vector from the angle
     Vector2 v;
-    v.x = sin(random);
-    v.y = cos(random);
+    v.x = std::sin(random);
+    v.y = std::cos(random);
 
     return v;
 }
