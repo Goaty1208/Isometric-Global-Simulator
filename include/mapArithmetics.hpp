@@ -43,8 +43,6 @@ enum tileIDs{
 
 };
 
-
-
 //Isometric coordinate to screen converter for tiles.
 Vector2 isometricToScreenTiles(Vector3 isoPosition) {
     Vector2 screenPosition;
@@ -101,27 +99,26 @@ void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int**
 
 }
 
-void updateMap(int** map, Vector2 position, int mapSize) {
-    int x = static_cast<int>(position.x) - 1;
-    int y = static_cast<int>(position.y) - 1;
-
-    std::cout << "Before Update - map[" << x << "][" << y << "] = " << map[x][y] << "\n";
+void updateMap(int** map, Vector2 position, int mapSize){
+    int x = static_cast<int>(position.x);
+    int y = static_cast<int>(position.y);
 
     // Check if the coordinates are within bounds before using them as indices
     if (x >= 0 && x < mapSize && y >= 0 && y < mapSize) {
         // Update map at the rounded coordinates
-        switch (map[x][y]) {
-            case 1:
-                map[x][y] = 0;
-                break;
-            case 0:
-                map[x][y] = 1;
-                break;
+        std::cout << "Before Update - map[" << x << "][" << y << "] = " << map[x][y] << "\n";
+        switch (map[x][y])
+        {
+        case 1:
+            map[x - 1][y - 1] = 0;
+            break;
+        case 0:
+            map[x - 1][y - 1] = 1;
+            break;
         }
+        std::cout << "After Update - map[" << x << "][" << y << "] = " << map[x][y] << "\n";
     }
-    std::cout << "After Update - map[" << x << "][" << y << "] = " << map[x][y] << "\n";
 }
-
 
 
 
