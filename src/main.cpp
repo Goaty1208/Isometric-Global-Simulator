@@ -3,14 +3,16 @@
 
 #include "mapGeneration.hpp"
 #include "mapArithmetics.hpp"
+#include "mapObject.hpp"
 
+int frameCounter = 0;
 
 int main(){
     
     Camera2D camera = { 0 };
     camera.zoom = 1.0f;
 
-    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.0.0.0.0.9");
+    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.0.0.0.0.11");
 
     Image grass = LoadImage("graphics/tiles/grass.png");
     Texture2D grassTexture = LoadTextureFromImage(grass);
@@ -18,9 +20,7 @@ int main(){
     Texture2D waterTexture = LoadTextureFromImage(water);
     
 
-    int** currentMap = new int*[mapDebug];
-
-    currentMap = generateMap(mapDebug);
+    mapObject currentMap(mapSize);
     
     SetTargetFPS(60);
 
@@ -54,7 +54,7 @@ int main(){
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
         {
             Vector2 delta = GetMouseDelta();
-            delta = Vector2Scale(delta, -1.0f/camera.zoom);
+            delta = Vector2Scale(delta, -1.0f / camera.zoom);
 
             camera.target = Vector2Add(camera.target, delta);
         }
@@ -84,14 +84,10 @@ int main(){
         Vector2 mousePos = GetMousePosition();
         Vector2 screenPos = GetScreenToWorld2D(mousePos, camera);
         Vector2 isoPos = screenToIsometric(screenPos);
-        std::cout << "Mouse: " << mousePos.x << ", " << mousePos.y << "\n";
-        std::cout << "Screen: " << screenPos.x << ", " << screenPos.y << "\n";
-        std::cout << "Isometric: " << isoPos.x << ", " << isoPos.y << "\n";    
 
-        if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
-            std::cout << "Left Mouse Button Pressed\n";
-            updateMap(currentMap, screenPosition, mapDebug);
-        }
+        frameCounter++;
+
+        mouseUpdate(camera, currentMap.mapValues, frameCounter, 5);
 
         //Draw segment.
         BeginDrawing();
@@ -99,7 +95,7 @@ int main(){
             ClearBackground(BLACK);
             BeginMode2D(camera);
             
-            drawMap(grassTexture, waterTexture, mapDebug, currentMap);
+            drawMap(grassTexture, waterTexture, currentMap.size, currentMap.mapValues);
 
             EndMode2D();
 
@@ -108,8 +104,7 @@ int main(){
         EndDrawing();
 
     }
-    
-    delete2DIntArray(currentMap, mapDebug);
+
     UnloadTexture(grassTexture);
     UnloadImage(grass);
     UnloadTexture(waterTexture);
