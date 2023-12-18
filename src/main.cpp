@@ -1,9 +1,10 @@
 #include "raylib.h"
 #include "raymath.h"
 
-#include "mapGeneration.hpp"
-#include "mapArithmetics.hpp"
-#include "mapObject.hpp"
+#include "engine/mapGeneration.hpp"
+#include "engine/mapArithmetics.hpp"
+#include "engine/mapObject.hpp"
+#include "engine/mouseInput.hpp"
 
 int frameCounter = 0;
 
@@ -12,7 +13,7 @@ int main(){
     Camera2D camera = { 0 };
     camera.zoom = 1.0f;
 
-    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.0.0.0.0.11");
+    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.0.0.0.0.12");
 
     Image grass = LoadImage("graphics/tiles/grass.png");
     Texture2D grassTexture = LoadTextureFromImage(grass);
@@ -87,7 +88,7 @@ int main(){
 
         frameCounter++;
 
-        mouseUpdate(camera, currentMap.mapValues, frameCounter, 5);
+        mouseUpdateOnClick(camera, currentMap.mapValues, currentMap.size);
 
         //Draw segment.
         BeginDrawing();

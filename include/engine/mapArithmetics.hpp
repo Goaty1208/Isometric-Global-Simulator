@@ -5,7 +5,7 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-#include "perlin.hpp"
+#include "engine/perlin.hpp"
 
 #ifndef MAP_ARITHMETICS_HPP
 #define MAP_ARITHMETICS_HPP

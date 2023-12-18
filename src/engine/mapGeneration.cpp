@@ -1,4 +1,4 @@
-#include "mapGeneration.hpp"
+#include "engine/mapGeneration.hpp"
 
 int** generateMap(int mapSize) {
     int** map = new int*[mapSize];

@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "mapArithmetics.hpp"
+#include "engine/mapArithmetics.hpp"
 
 #ifndef MAP_GENERATOR_HPP
 #define MAP_GENERATOR_HPP
