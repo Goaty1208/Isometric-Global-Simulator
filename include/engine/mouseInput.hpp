@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "mapObject.hpp"
+#include "mapArithmetics.hpp"
 
 #ifndef MOUSE_INPUT_HPP
 #define MOUSE_INPUT_HPP

@@ -18,9 +18,10 @@ void mouseUpdateOnClick(Camera2D camera, int** currentMap, int size){
 
     Vector2 screenPosition = screenToIsometric(GetScreenToWorld2D(GetMousePosition(), camera));
 
-    if (screenPosition.x > 0 && screenPosition.y > 0) {
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && screenPosition.x > 0 && screenPosition.y > 0) {
+        
         std::cout << "Left Mouse Button Pressed\n";
-        updateMap(currentMap, screenPosition, mapDebug);
-    }
+        updateMap(currentMap, screenPosition, size);
 
+    }
 }
