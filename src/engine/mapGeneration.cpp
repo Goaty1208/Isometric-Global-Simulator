@@ -29,3 +29,4 @@ void delete2DIntArray(int** map, int mapSize) {
 
     delete[] map;
 }
+

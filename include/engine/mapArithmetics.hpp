@@ -31,7 +31,7 @@ const int tileHeight = 32;
 
 //Map sizes ------------------------------
 const int mapDebug = 16;
-const int mapSize = 256;
+const int mapSize = 32;
 const int mapSizeMedium = 1024;
 const int mapSizeLarge = 2048;
 const int mapSizeExtra = 4096;

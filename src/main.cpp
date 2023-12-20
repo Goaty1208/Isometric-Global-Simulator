@@ -1,6 +1,8 @@
 #include "raylib.h"
 #include "raymath.h"
 
+#include <thread>
+
 #include "engine/mapGeneration.hpp"
 #include "engine/mapArithmetics.hpp"
 #include "engine/mapObject.hpp"
@@ -115,3 +117,4 @@ int main(){
 
     return 0;
 }
+

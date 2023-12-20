@@ -39,7 +39,6 @@ void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int**
             case grass:
                 DrawTexture(grassTexture, screenPosition.x, screenPosition.y, WHITE);
                 break;
-            
             case water:
                 DrawTexture(waterTexture, screenPosition.x, screenPosition.y, WHITE);
                 break;
