@@ -53,12 +53,15 @@ Vector2 isometricToScreen(Vector3 isoPosition);
 //Screen coordinate to isometric converter for tiles.
 Vector2 screenToIsometric(Vector2 screenPosition);
 
-void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int** map);
+//Magical fuckery
+int index2Dto1D(int i, int j, int size);
 
-void updateMap(int** map, Vector2 position, int mapSize);
+void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int* map);
+
+void updateMap(int* map, Vector2 position, int mapSize);
 
 
-// Check for left mouse button press every frameCount frames, then update the map
-void mouseUpdate(Camera2D camera, int** currentMap, int frameCounter, int frameCount);
+// Check for left mouse button press every frameCount frames, then update the map. Outdated.
+void mouseUpdate(Camera2D camera, int* currentMap, int frameCounter, int frameCount);
 
 #endif

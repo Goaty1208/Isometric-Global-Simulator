@@ -1,6 +1,6 @@
 #include "engine/mouseInput.hpp"
 
-void mouseUpdateHeld(Camera2D camera, int** currentMap, int frameCounter, int frameCount, int size){
+void mouseUpdateHeld(Camera2D camera, int* currentMap, int frameCounter, int frameCount, int size){
 
     if (frameCounter % frameCount == 0 && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         Vector2 screenPosition = screenToIsometric(GetScreenToWorld2D(GetMousePosition(), camera));
@@ -14,7 +14,7 @@ void mouseUpdateHeld(Camera2D camera, int** currentMap, int frameCounter, int fr
     }
 }
 
-void mouseUpdateOnClick(Camera2D camera, int** currentMap, int size){
+void mouseUpdateOnClick(Camera2D camera, int* currentMap, int size){
 
     Vector2 screenPosition = screenToIsometric(GetScreenToWorld2D(GetMousePosition(), camera));
 

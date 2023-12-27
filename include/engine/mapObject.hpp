@@ -9,7 +9,6 @@ class mapObject
 {
 public:
     int size;
-    int** mapValues;
     int* mapArray;
 
     mapObject(int size);
@@ -18,8 +17,7 @@ public:
     void updateMap(Vector2 position);
 
 private:
-    void deleteMap(int** map, int mapSize);
-    int* convertTo1DMap();
+    void deleteMap(int* map, int mapSize);
 };
 
 #endif

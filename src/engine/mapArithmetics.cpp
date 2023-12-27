@@ -28,13 +28,20 @@ Vector2 screenToIsometric(Vector2 screenPosition) {
     return isoPosition;
 }
 
-void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int** map){
+//Might work. I hope. Update: broke fucking everything
+int index2Dto1D(int i, int j, int size){
+
+    return i*size+j;
+
+}
+
+void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int* map){
 
     for (int i = 0; i < drawSize; i++) { //Tile drawing. Pretty damn primitive
         for (int j = 0; j < drawSize; j++) {
-            Vector3 tilePosition = { static_cast<float>(i), static_cast<float>(j), static_cast<float>(map[i][j]) };
+            Vector3 tilePosition = { static_cast<float>(i), static_cast<float>(j), static_cast<float>(map[index2Dto1D(i, j, drawSize)]) };
             Vector2 screenPosition = isometricToScreenTiles(tilePosition);
-            switch (map[i][j])
+            switch (map[index2Dto1D(i, j, drawSize)])
             {
             case grass:
                 DrawTexture(grassTexture, screenPosition.x, screenPosition.y, WHITE);
@@ -52,23 +59,23 @@ void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int**
 
 }
 
-void updateMap(int** map, Vector2 position, int mapSize){
+void updateMap(int* map, Vector2 position, int mapSize){
     int x = static_cast<int>(position.x) - 1;
     int y = static_cast<int>(position.y) - 1;
 
     // Check if the coordinates are within bounds before using them as indices
     if (x >= 0 && x < mapSize && y >= 0 && y < mapSize) {
         // Update map at the rounded coordinates
-        std::cout << "Before Update - map[" << x << "][" << y << "] = " << map[x][y] << "\n";
-        switch (map[x][y]){
+        std::cout << "Before Update - map[" << x << "][" << y << "] = " << map[index2Dto1D(y, x, mapSize)] << "\n";
+        switch (map[index2Dto1D(x, y, mapSize)]){
         
         case 1:
-            map[x][y] = 0;
+            map[index2Dto1D(y, x, mapSize)] = 0;
             break;
         case 0:
-            map[x][y] = 1;
+            map[index2Dto1D(y, x, mapSize)] = 1;
             break;
         }
-        std::cout << "After Update - map[" << x << "][" << y << "] = " << map[x][y] << "\n";
+        std::cout << "After Update - map[" << x << "][" << y << "] = " << map[index2Dto1D(y, x, mapSize)] << "\n";
     }
 }

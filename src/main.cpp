@@ -15,7 +15,14 @@ int main(){
     Camera2D camera = { 0 };
     camera.zoom = 1.0f;
 
-    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.0.0.0.0.12");
+    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.0.0.0.0.13");
+
+    double previousTime = GetTime();    // Previous time measure
+    double currentTime = 0.0;           // Current time measure
+    double updateDrawTime = 0.0;        // Update + Draw time
+    double waitTime = 0.0;              // Wait time (if target fps required)
+    float deltaTime = 0.0f;             // Frame time (Update + Draw + Wait time)  
+    int targetFPS = 60;
 
     Image grass = LoadImage("graphics/tiles/grass.png");
     Texture2D grassTexture = LoadTextureFromImage(grass);
@@ -25,7 +32,7 @@ int main(){
 
     mapObject currentMap(mapSize);
     
-    SetTargetFPS(60);
+    SetTargetFPS(targetFPS);
 
     while (!WindowShouldClose()){
 
@@ -90,7 +97,7 @@ int main(){
 
         frameCounter++;
 
-        mouseUpdateOnClick(camera, currentMap.mapValues, currentMap.size);
+        mouseUpdateOnClick(camera, currentMap.mapArray, currentMap.size);
 
         //Draw segment.
         BeginDrawing();
@@ -98,13 +105,31 @@ int main(){
             ClearBackground(BLACK);
             BeginMode2D(camera);
             
-            drawMap(grassTexture, waterTexture, currentMap.size, currentMap.mapValues);
+            drawMap(grassTexture, waterTexture, currentMap.size, currentMap.mapArray);
 
             EndMode2D();
 
             DrawFPS(1,1);
    
         EndDrawing();
+
+
+        currentTime = GetTime();
+        updateDrawTime = currentTime - previousTime;
+        
+        if (targetFPS > 0)          // We want a fixed frame rate
+        {
+            waitTime = (1.0f/(float)targetFPS) - updateDrawTime;
+            if (waitTime > 0.0) 
+            {
+                WaitTime((float)waitTime);
+                currentTime = GetTime();
+                deltaTime = (float)(currentTime - previousTime);
+            }
+        }
+        else deltaTime = (float)updateDrawTime;    // Framerate could be variable
+
+        previousTime = currentTime;
 
     }
 
