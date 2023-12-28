@@ -1,3 +1,4 @@
 *.exe
 raylib.h
 raymath.h
+.releases
