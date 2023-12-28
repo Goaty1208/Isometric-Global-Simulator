@@ -39,6 +39,7 @@ void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int* 
 
     Vector2 screenSize = { static_cast<float>(windowWidth), static_cast<float>(windowHeight) };
     Vector2 worldSize = GetScreenToWorld2D(screenSize, camera);
+    Vector2 screenZero = GetScreenToWorld2D({0.0f, 0.0f}, camera);
     
     for (int i = 0; i < drawSize; i++) { //Tile drawing. Pretty damn primitive
         for (int j = 0; j < drawSize; j++) {
@@ -61,7 +62,7 @@ void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int* 
                 break;
             }
 
-            if ((screenPosition.x >= 0 && screenPosition.x <= worldSize.x && screenPosition.y >= 0 && screenPosition.y <= worldSize.y)){
+            if (((screenPosition.x + tileWidth >= screenZero.x && screenPosition.x <= worldSize.x) && (screenPosition.y + tileHeight >= screenZero.y && screenPosition.y <= worldSize.y))){
 
                 DrawTexture(tile, screenPosition.x, screenPosition.y, WHITE);
 

@@ -15,7 +15,7 @@ int main(){
     Camera2D camera = { 0 };
     camera.zoom = 1.0f;
 
-    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.0.0.0.0.13");
+    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.14");
 
     double previousTime = GetTime();    // Previous time measure
     double currentTime = 0.0;           // Current time measure
@@ -30,7 +30,7 @@ int main(){
     Texture2D waterTexture = LoadTextureFromImage(water);
     
 
-    mapObject currentMap(mapSize);
+    mapObject currentMap(mapSizeExtra);
     
     SetTargetFPS(targetFPS);
 
