@@ -31,7 +31,7 @@ const int tileHeight = 32;
 
 //Map sizes ------------------------------
 const int mapDebug = 16;
-const int mapSize = 32;
+const int mapSize = 512;
 const int mapSizeMedium = 1024;
 const int mapSizeLarge = 2048;
 const int mapSizeExtra = 4096;
@@ -56,7 +56,7 @@ Vector2 screenToIsometric(Vector2 screenPosition);
 //Magical fuckery
 int index2Dto1D(int i, int j, int size);
 
-void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int* map);
+void drawMap(Texture2D grassTexture, Texture2D waterTexture, int drawSize, int* map, Camera2D camera);
 
 void updateMap(int* map, Vector2 position, int mapSize);
 

@@ -105,7 +105,7 @@ int main(){
             ClearBackground(BLACK);
             BeginMode2D(camera);
             
-            drawMap(grassTexture, waterTexture, currentMap.size, currentMap.mapArray);
+            drawMap(grassTexture, waterTexture, currentMap.size, currentMap.mapArray, camera);
 
             EndMode2D();
 

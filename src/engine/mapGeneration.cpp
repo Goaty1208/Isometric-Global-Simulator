@@ -23,14 +23,8 @@ int* generateMap(int mapSize) {
         for (int j = 0; j < mapSize; ++j) {
 
             float perlinValue = perlinGeneration(offsetX + i / scale, offsetY + j / scale);
-            std::cout << "i: " << i << ", j: " << j << ", perlinValue: " << perlinValue << " map value: ";
-
 
             map[index2Dto1D(i, j, mapSize)] = (perlinValue < 0.5f) ? grass : water;
-
-            std::cout << map[index2Dto1D(i, j, mapSize)] << "\n";
-
-
             
         }
     }
