@@ -1,5 +1,7 @@
 #include "raylib.h"
 #include "engine/mapArithmetics.hpp"
+#include <cassert>
+#define assertm(exp, msg) assert(((void)msg, exp))
 
 #ifndef MAP_GENERATOR_HPP
 #define MAP_GENERATOR_HPP

@@ -1,5 +1,7 @@
 #include "raylib.h"
 #include <cmath>
+#include <cassert>
+#define assertm(exp, msg)
 
 #ifndef PERLIN_HPP
 #define PERLIN_HPP

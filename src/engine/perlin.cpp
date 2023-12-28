@@ -22,6 +22,7 @@ Vector2 randomGradient(int ix, int iy) {
 }
 
 float dotGridGradient(int ix, int iy, float x, float y) {
+    assertm(ix >= 0 && iy >= 0, "Gradient Error"); // Ensure non-negative indices
     Vector2 gradient = randomGradient(ix, iy);
 
     float dx = x - static_cast<float>(ix);
@@ -29,6 +30,7 @@ float dotGridGradient(int ix, int iy, float x, float y) {
 
     return (dx * gradient.x + dy * gradient.y);
 }
+
 
 float cubicInterpolation(float a0, float a1, float w) {
     return (a1 - a0) * (3.0 - w * 2.0) * w * w + a0;
