@@ -3,7 +3,7 @@
 
 int* generateMap(int mapSize) {
 
-    int* map = new int[mapSize];
+    int* map = new int[mapSize*mapSize];
 
     srand(static_cast<unsigned int>(time(nullptr)));
 
