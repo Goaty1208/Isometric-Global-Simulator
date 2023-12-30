@@ -7,6 +7,7 @@
 #include "engine/mapArithmetics.hpp"
 #include "engine/mapObject.hpp"
 #include "engine/mouseInput.hpp"
+#include "engine/human.hpp"
 
 int frameCounter = 0;
 
@@ -15,7 +16,7 @@ int main(){
     Camera2D camera = { 0 };
     camera.zoom = 1.0f;
 
-    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.14");
+    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.15");
 
     double previousTime = GetTime();    // Previous time measure
     double currentTime = 0.0;           // Current time measure
@@ -24,14 +25,16 @@ int main(){
     float deltaTime = 0.0f;             // Frame time (Update + Draw + Wait time)  
     int targetFPS = 60;
 
-    Image grass = LoadImage("graphics/tiles/grass.png");
-    Texture2D grassTexture = LoadTextureFromImage(grass);
-    Image water = LoadImage("graphics/tiles/water.png");
-    Texture2D waterTexture = LoadTextureFromImage(water);
+
+    Texture2D grassTexture = LoadTexture("graphics/tiles/grass.png");
+    Texture2D waterTexture = LoadTexture("graphics/tiles/water.png");
+    Texture2D humanDefault = LoadTexture("graphics/creatures/human.png");
     
 
     mapObject currentMap(mapSizeExtra);
     
+    Human jerry(humanDefault, {0, 0});
+
     SetTargetFPS(targetFPS);
 
     while (!WindowShouldClose()){
@@ -107,6 +110,8 @@ int main(){
             
             drawMap(grassTexture, waterTexture, currentMap.size, currentMap.mapArray, camera);
 
+            jerry.renderHuman();
+
             EndMode2D();
 
             DrawFPS(1,1);
@@ -134,9 +139,8 @@ int main(){
     }
 
     UnloadTexture(grassTexture);
-    UnloadImage(grass);
     UnloadTexture(waterTexture);
-    UnloadImage(water);
+    UnloadTexture(humanDefault);
 
     CloseWindow();
 
