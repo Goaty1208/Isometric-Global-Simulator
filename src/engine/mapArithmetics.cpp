@@ -28,6 +28,18 @@ Vector2 screenToIsometric(Vector2 screenPosition) {
     return isoPosition;
 }
 
+Vector2 screenToIsometric(Vector3 screenPosition) {
+    Vector2 isoPosition;
+    isoPosition.x = (screenPosition.x / (tileWidth * 0.5f) + screenPosition.y / (tileHeight * 0.5f)) * 0.5f;
+    isoPosition.y = (screenPosition.y / (tileHeight * 0.5f) - (screenPosition.x / (tileWidth * 0.5f))) * 0.5f;
+    
+    // Round to the nearest whole values
+    isoPosition.x = static_cast<float>(std::round(isoPosition.x));
+    isoPosition.y = static_cast<float>(std::round(isoPosition.y) + 1);
+
+    return isoPosition;
+}
+
 //Might work. I hope. Update: broke fucking everything
 int index2Dto1D(int i, int j, int size){
 

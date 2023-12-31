@@ -52,6 +52,7 @@ Vector2 isometricToScreen(Vector3 isoPosition);
 
 //Screen coordinate to isometric converter for tiles.
 Vector2 screenToIsometric(Vector2 screenPosition);
+Vector2 screenToIsometric(Vector3 screenPosition);
 
 //Magical fuckery
 int index2Dto1D(int i, int j, int size);

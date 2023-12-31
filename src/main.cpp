@@ -2,6 +2,7 @@
 #include "raymath.h"
 
 #include <thread>
+#include <iostream>
 
 #include "engine/mapGeneration.hpp"
 #include "engine/mapArithmetics.hpp"
@@ -31,9 +32,9 @@ int main(){
     Texture2D humanDefault = LoadTexture("graphics/creatures/human.png");
     
 
-    mapObject currentMap(mapSizeExtra);
+    mapObject currentMap(mapSizeMedium);
     
-    Human jerry(humanDefault, {0, 0});
+    Human jerry(humanDefault, {0, 0, 0});
 
     SetTargetFPS(targetFPS);
 
@@ -98,9 +99,21 @@ int main(){
         Vector2 screenPos = GetScreenToWorld2D(mousePos, camera);
         Vector2 isoPos = screenToIsometric(screenPos);
 
+        std::cout << "Mouse X: " << isoPos.x << " Mouse Y: " << isoPos.y <<"\n";
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
+        {
+            jerry.setPosition(isoPos.x, isoPos.y);
+
+        }
+
         frameCounter++;
 
+        //std::cout << "Mouse X: " << mousePosIso.x << " Mouse Y: " << mousePosIso.y << "\n";
+
         mouseUpdateOnClick(camera, currentMap.mapArray, currentMap.size);
+
+        jerry.update();
 
         //Draw segment.
         BeginDrawing();
@@ -110,7 +123,7 @@ int main(){
             
             drawMap(grassTexture, waterTexture, currentMap.size, currentMap.mapArray, camera);
 
-            jerry.renderHuman();
+            jerry.render(camera);
 
             EndMode2D();
 
