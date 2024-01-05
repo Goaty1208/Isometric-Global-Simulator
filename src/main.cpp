@@ -94,7 +94,7 @@ int main(){
             if (camera.zoom < zoomIncrement) camera.zoom = zoomIncrement;
         }
         //Camera ends --------------------------------------------------
-        Vector2 screenPosition = screenToIsometric(GetScreenToWorld2D(GetMousePosition(), camera));
+        Vector2 screenPosition = screenToIsometricPrecise(GetScreenToWorld2D(GetMousePosition(), camera));
         Vector2 mousePos = GetMousePosition();
 
 

@@ -26,46 +26,33 @@ Human::~Human(){
 
 void Human::render(Camera2D camera){
 
-    Vector2 screenSize = { static_cast<float>(windowWidth), static_cast<float>(windowHeight) };
-    Vector2 worldSize = GetScreenToWorld2D(screenSize, camera);
-    Vector2 screenZero = GetScreenToWorld2D({0.0f, 0.0f}, camera);
+    Vector2 screenPosition = isometricToScreen(this->position);
 
-    Vector3 tilePosition = { static_cast<float>(this->position.x), static_cast<float>(this->position.y), 0.0f };
-    Vector2 screenPosition = isometricToScreenTiles(tilePosition);
-    
-    if (((screenPosition.x + tileWidth >= screenZero.x && screenPosition.x <= worldSize.x) && (screenPosition.y + tileHeight >= screenZero.y && screenPosition.y <= worldSize.y))){
-
-        DrawTexture(this->texture, this->position.x + this->texture.width, this->position.y + this->texture.height, WHITE);
-
-    }
-
+    DrawTexture(this->texture, screenPosition.x + tileWidth / 2 - 4, screenPosition.y - tileHeight / 2, WHITE);
 
 }
 
 void::Human::update(){
 
-    Vector2 isoPosition = isometricToScreenTiles(this->position);
-
-    std::cout << "X: " << isoPosition.x << " Y: " << isoPosition.y << "\n";
-
-    this->move(0.00001, 0.00001);
+    std::cout << "X: " << this->position.x << " Y: " << this->position.y << "\n";
 
 }
 
 void Human::move(float tilesX, float tilesY) {
 
-    float pixelX = tilesX * tileWidth;
-    float pixelY = tilesY * tileHeight;
-
-    this->position.x += pixelX;
-    this->position.y += pixelY;
+    this->position.x += tilesX;
+    this->position.y += tilesY;
 }
 
 void Human::setPosition(float tilesX, float tilesY) {
 
-    float pixelX = tilesX * tileWidth;
-    float pixelY = tilesY * tileHeight;
+    Vector2 screenPosition = isometricToScreen({tilesX, tilesY});
 
-    this->position.x = pixelX;
-    this->position.y = pixelY;
+    screenPosition.x -= tileWidth / 2;
+    screenPosition.y += 0;
+
+    screenPosition = screenToIsometricPrecise(screenPosition);
+
+    this->position.x = screenPosition.x;
+    this->position.y = screenPosition.y;
 }

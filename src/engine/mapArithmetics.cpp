@@ -2,21 +2,21 @@
 
 int display = GetCurrentMonitor();
 
-Vector2 isometricToScreenTiles(Vector3 isoPosition) {
+Vector2 isometricToScreenTiles(Vector3 isoPosition){
     Vector2 screenPosition;
     screenPosition.x = (isoPosition.x - isoPosition.y) * (tileWidth * i_y);
     screenPosition.y = (isoPosition.x + isoPosition.y) * (tileHeight * j_y);
     return screenPosition;
 }
 
-Vector2 isometricToScreen(Vector3 isoPosition) {
+Vector2 isometricToScreen(Vector3 isoPosition){
     Vector2 screenPosition;
     screenPosition.x = (isoPosition.x - isoPosition.y) * (tileWidth * i_y);
     screenPosition.y = (isoPosition.x + isoPosition.y) * (tileHeight * j_y);
     return screenPosition;
 }
 
-Vector2 screenToIsometric(Vector2 screenPosition) {
+Vector2 screenToIsometric(Vector2 screenPosition){
     Vector2 isoPosition;
     isoPosition.x = (screenPosition.x / (tileWidth * 0.5f) + screenPosition.y / (tileHeight * 0.5f)) * 0.5f;
     isoPosition.y = (screenPosition.y / (tileHeight * 0.5f) - (screenPosition.x / (tileWidth * 0.5f))) * 0.5f;
@@ -28,7 +28,17 @@ Vector2 screenToIsometric(Vector2 screenPosition) {
     return isoPosition;
 }
 
-Vector2 screenToIsometric(Vector3 screenPosition) {
+//Rounding is for pussies
+Vector2 screenToIsometricPrecise(Vector2 screenPosition){
+
+    Vector2 isoPosition;
+    isoPosition.x = (screenPosition.x / (tileWidth * 0.5f) + screenPosition.y / (tileHeight * 0.5f)) * 0.5f;
+    isoPosition.y = (screenPosition.y / (tileHeight * 0.5f) - (screenPosition.x / (tileWidth * 0.5f))) * 0.5f;
+
+    return isoPosition;
+}
+
+Vector2 screenToIsometric(Vector3 screenPosition){
     Vector2 isoPosition;
     isoPosition.x = (screenPosition.x / (tileWidth * 0.5f) + screenPosition.y / (tileHeight * 0.5f)) * 0.5f;
     isoPosition.y = (screenPosition.y / (tileHeight * 0.5f) - (screenPosition.x / (tileWidth * 0.5f))) * 0.5f;
