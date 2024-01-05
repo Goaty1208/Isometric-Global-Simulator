@@ -96,14 +96,13 @@ int main(){
         //Camera ends --------------------------------------------------
         Vector2 screenPosition = screenToIsometric(GetScreenToWorld2D(GetMousePosition(), camera));
         Vector2 mousePos = GetMousePosition();
-        Vector2 screenPos = GetScreenToWorld2D(mousePos, camera);
-        Vector2 isoPos = screenToIsometric(screenPos);
 
-        std::cout << "Mouse X: " << isoPos.x << " Mouse Y: " << isoPos.y <<"\n";
+
+        std::cout << "Mouse X: " << screenPosition.x << " Mouse Y: " << screenPosition.y <<"\n";
 
         if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
         {
-            jerry.setPosition(isoPos.x, isoPos.y);
+            jerry.setPosition(screenPosition.x, screenPosition.y);
 
         }
 
