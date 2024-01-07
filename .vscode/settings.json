@@ -52,5 +52,6 @@
         "semaphore": "cpp",
         "stop_token": "cpp",
         "thread": "cpp"
-    }
+    },
+    "workbench.iconTheme": "vscode-icons"
 }
