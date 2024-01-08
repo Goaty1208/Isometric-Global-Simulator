@@ -12,13 +12,12 @@
 class ProgramState{
 
 private:
+    
     void windowResCheck();
-    void cameraUpdate();
-    void checkInput();
     void updateTime();
 public:
     int frameCounter;
-    Camera2D camera;
+    
     double previousTime;    // Previous time measure
     double currentTime;           // Current time measure
     double updateDrawTime;        // Update + Draw time
@@ -44,11 +43,6 @@ public:
 ProgramState::ProgramState(){
 
     this->frameCounter = 0;
-
-    this->camera = { 0 };
-    this->camera.zoom = 1.0f;
-
-    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.16");
 
     this->previousTime = GetTime();
     this->currentTime = 0.0;
@@ -96,7 +90,100 @@ void ProgramState::windowResCheck(){
  	}
 }
 
-void ProgramState::cameraUpdate(){
+void ProgramState::updateTime(){
+
+    this->currentTime = GetTime();
+    this->updateDrawTime = this->currentTime - this->previousTime;
+        
+    if (this->targetFPS > 0)          // We want a fixed frame rate
+    {
+        this->waitTime = (1.0f/(float)this->targetFPS) - this->updateDrawTime;
+        if (this->waitTime > 0.0) 
+        {
+            WaitTime((float)this->waitTime);
+            this->currentTime = GetTime();
+            this->deltaTime = (float)(this->currentTime - this->previousTime);
+        }
+    }
+    else this->deltaTime = (float)this->updateDrawTime;    // Framerate could be variable
+
+    this->previousTime = this->currentTime;
+    this->frameCounter++;
+
+}
+
+void ProgramState::updateProgram(){
+
+    this->windowResCheck();
+    this->updateTime();
+}
+
+class GameState{
+
+private:
+    Vector2 screenSize = { static_cast<float>(windowWidth), static_cast<float>(windowHeight) };
+    Vector2 worldSize = GetScreenToWorld2D(screenSize, this->camera);
+    Vector2 screenZero = GetScreenToWorld2D({0.0f, 0.0f}, this->camera);
+public:
+    void checkInput();
+    void cameraUpdate();
+    Camera2D camera = { 0 };
+    ProgramState programState;
+    mapObject currentMap;
+    std::vector<Human> human; //All humans have STDs
+    GameState(int currentMapSize, ProgramState programState);
+    ~GameState();
+    void renderGame();
+    void updateGame();
+};
+
+void GameState::checkInput(){
+
+    Vector2 screenPosition = screenToIsometricPrecise(GetScreenToWorld2D(GetMousePosition(), this->camera));
+    Vector2 mousePos = GetMousePosition();
+
+    std::cout << "Mouse X: " << screenPosition.x << " Mouse Y: " << screenPosition.y <<"\n";
+
+}
+
+//Classes are funny
+GameState::GameState(int currentMapSize, ProgramState programState) : currentMap(currentMapSize){
+    
+    this->camera.zoom = 1.0f;
+    this->programState = programState;
+    for (int i = 0; i < mapSizeMedium; i++){
+
+        for (int j = 0; j < mapSizeMedium; j++){
+
+            human.push_back(Human(programState.humanDefault, {static_cast<float>(i),static_cast<float>(j),0}));
+        }
+    }
+    
+    
+
+}
+
+GameState::~GameState(){
+
+}
+
+void GameState::updateGame(){
+   this->screenSize = { static_cast<float>(windowWidth), static_cast<float>(windowHeight) };
+   this->worldSize = GetScreenToWorld2D(screenSize, this->camera);
+   this->screenZero = GetScreenToWorld2D({0.0f, 0.0f}, this->camera);
+}
+
+void GameState::renderGame(){
+    
+    drawMap(this->programState.grassTexture, this->programState.waterTexture, this->currentMap.size, this->currentMap.mapArray, this->camera);
+
+    for (Human &i : this->human){ //Human
+        i.render(this->camera, this->screenZero, this->worldSize);
+    }
+
+}
+
+void GameState::cameraUpdate(){
 
     //Camera shitfuckery starts ------------------------------------
     // Translate based on mouse right click
@@ -129,81 +216,7 @@ void ProgramState::cameraUpdate(){
         if (this->camera.zoom < zoomIncrement) this->camera.zoom = zoomIncrement;
         
     }
-        //Camera ends --------------------------------------------------
-
-}
-
-void ProgramState::checkInput(){
-
-    Vector2 screenPosition = screenToIsometricPrecise(GetScreenToWorld2D(GetMousePosition(), this->camera));
-    Vector2 mousePos = GetMousePosition();
-
-    std::cout << "Mouse X: " << screenPosition.x << " Mouse Y: " << screenPosition.y <<"\n";
-
-}
-
-void draw(ProgramState programState){
-
-
-
-}
-
-void ProgramState::updateTime(){
-
-    this->currentTime = GetTime();
-    this->updateDrawTime = this->currentTime - this->previousTime;
-        
-    if (this->targetFPS > 0)          // We want a fixed frame rate
-    {
-        this->waitTime = (1.0f/(float)this->targetFPS) - this->updateDrawTime;
-        if (this->waitTime > 0.0) 
-        {
-            WaitTime((float)this->waitTime);
-            this->currentTime = GetTime();
-            this->deltaTime = (float)(this->currentTime - this->previousTime);
-        }
-    }
-    else this->deltaTime = (float)this->updateDrawTime;    // Framerate could be variable
-
-    this->previousTime = this->currentTime;
-    this->frameCounter++;
-
-}
-
-void ProgramState::updateProgram(){
-
-    this->windowResCheck();
-    this->cameraUpdate();
-    this->checkInput();
-    this->updateTime();
-}
-
-class GameState{
-
-private:
-    ProgramState programState;
-public:
-    mapObject currentMap;
-    std::vector<Human> human; //All humans have STDs
-    GameState(int currentMapSize, ProgramState programState);
-    ~GameState();
-    void renderGame();
-};
-
-//Classes are funny
-GameState::GameState(int currentMapSize, ProgramState programState) : currentMap(currentMapSize){
-
-    this->programState = programState;
-
-}
-
-GameState::~GameState(){
-
-}
-
-void GameState::renderGame(){
-
-    drawMap(this->programState.grassTexture, this->programState.waterTexture, this->currentMap.size, this->currentMap.mapArray, this->programState.camera);
+    //Camera ends --------------------------------------------------
 
 }
 
@@ -213,15 +226,18 @@ void runGame(ProgramState programState, GameState gameState){
 
     while (!WindowShouldClose()){
 
-        mouseUpdateOnClick(programState.camera, gameState.currentMap.mapArray, gameState.currentMap.size);
+        mouseUpdateOnClick(gameState.camera, gameState.currentMap.mapArray, gameState.currentMap.size);
 
         programState.updateProgram();
-
+        gameState.updateGame();
+        
+        gameState.cameraUpdate();
+        gameState.checkInput();
         //Draw segment.
         BeginDrawing();
 
             ClearBackground(BLACK);
-            BeginMode2D(programState.camera);
+            BeginMode2D(gameState.camera);
 
             gameState.renderGame();
 

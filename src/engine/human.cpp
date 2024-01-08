@@ -24,11 +24,18 @@ Human::~Human(){
 
 }
 
-void Human::render(Camera2D camera){
+void Human::render(Camera2D camera, Vector2 screenZero, Vector2 worldSize){
 
+    
     Vector2 screenPosition = isometricToScreen(this->position);
 
-    DrawTexture(this->texture, screenPosition.x + tileWidth / 2 - 4, screenPosition.y - tileHeight / 2, WHITE);
+    if (((screenPosition.x + (this->texture.width * 4) >= screenZero.x && screenPosition.x <= worldSize.x) && (screenPosition.y + (this->texture.height * 2) >= screenZero.y && screenPosition.y - (this->texture.height * 2) <= worldSize.y))){
+        
+        DrawTexture(this->texture, screenPosition.x + tileWidth / 2 - 4, screenPosition.y - tileHeight / 2, WHITE);
+
+    }
+    
+    
 
 }
 

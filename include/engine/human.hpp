@@ -26,10 +26,10 @@ public:
 
     uint8_t traits[10];
 
-    Human(Texture2D texture, Vector3 position);
+    Human(Texture2D texture, Vector3 position = {0, 0, 0});
     ~Human();
 
-    void render(Camera2D camera);
+    void render(Camera2D camera, Vector2 screenZero, Vector2 worldSize);
 
     void move(float tilesX, float tilesY);
 

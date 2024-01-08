@@ -13,6 +13,8 @@
 
 int main(){
     
+    InitWindow(windowWidth, windowHeight, "Isometric Global Simulator- 0.0.0.16");
+
     ProgramState program;
     GameState game(mapSizeMedium, program);
 
