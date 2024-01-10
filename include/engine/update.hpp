@@ -174,6 +174,12 @@ void GameState::updateGame(){
    this->screenSize = { static_cast<float>(windowWidth), static_cast<float>(windowHeight) };
    this->worldSize = GetScreenToWorld2D(screenSize, this->camera);
    this->screenZero = GetScreenToWorld2D({0.0f, 0.0f}, this->camera);
+
+    for (Human &i: this->human){
+        i.update();
+    }
+        
+
 }
 
 bool compareHumans(const Human &a, const Human &b) {

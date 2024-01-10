@@ -4,7 +4,7 @@
         {
             "label": "Compile with Makefile: Debug",
             "type": "shell",
-            "command": "cd build ; mingw32-make debug ; start igsMain.exe"
+            "command": "cd build ; mingw32-make debugButCool ; start igsMain.exe"
         },
         {
             "label": "Compile with Makefile: Main",

@@ -1,5 +1,8 @@
 #include "engine/human.hpp"
 
+#include <cstdlib>
+#include <ctime>
+
 Human::Human(Texture2D texture, Vector3 position){
     
     this->ID = rand();
@@ -26,8 +29,14 @@ Human::~Human(){
 
 void Human::render(Camera2D camera, Vector2 screenZero, Vector2 worldSize){
 
+    Vector2 screenPosition;
     
-    Vector2 screenPosition = isometricToScreen(this->position);
+    if (this == nullptr){
+        std::cerr << "How the fuck? Human " << this->ID << " is a null pointer.\n";
+        return;
+    }
+    
+    screenPosition = isometricToScreen(this->position);
 
     if (((screenPosition.x + (this->texture.width * 4) >= screenZero.x && screenPosition.x <= worldSize.x) && (screenPosition.y + (this->texture.height * 2) >= screenZero.y && screenPosition.y - (this->texture.height * 2) <= worldSize.y))){
         
@@ -41,7 +50,8 @@ void Human::render(Camera2D camera, Vector2 screenZero, Vector2 worldSize){
 
 void::Human::update(){
 
-    std::cout << "X: " << this->position.x << " Y: " << this->position.y << "\n";
+    this->position.x += 0.01f;
+    this->position.y += 0.01f;
 
 }
 

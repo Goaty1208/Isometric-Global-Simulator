@@ -53,5 +53,10 @@
         "stop_token": "cpp",
         "thread": "cpp"
     },
-    "workbench.iconTheme": "vscode-icons"
+    "workbench.iconTheme": "vscode-icons",
+    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+        "clang-diagnostic-tautological-undefined-compare",
+        "clang-diagnostic-error",
+        "clang-diagnostic-error"
+    ]
 }
