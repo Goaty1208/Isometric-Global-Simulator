@@ -17,6 +17,11 @@ Welcome to the Isometric Global Simulator (IGS), a project aimed at creating a v
 
 - **Culling Optimization**: Improved rendering efficiency with enhanced culling mechanisms, resulting in better performance. Hopefully.
 - **Bug Fixes**: Addressed issues related to memory allocation and generation functions.
+- 
+## What's New in Version 0.0.16
+
+### Classy Enhancements
+- **Added game and program state classes**
 
 ## Getting Started
 

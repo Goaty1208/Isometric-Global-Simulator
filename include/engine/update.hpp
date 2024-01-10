@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include "raylib.h"
 #include "raymath.h"
@@ -139,10 +140,18 @@ public:
 
 void GameState::checkInput(){
 
-    Vector2 screenPosition = screenToIsometricPrecise(GetScreenToWorld2D(GetMousePosition(), this->camera));
-    Vector2 mousePos = GetMousePosition();
+    Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), this->camera);
+    mousePos.x -= tileWidth / 2;
+    mousePos = screenToIsometricPrecise(mousePos);
 
-    std::cout << "Mouse X: " << screenPosition.x << " Mouse Y: " << screenPosition.y <<"\n";
+    if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)){
+
+        this->human.push_back(Human(programState.humanDefault, {static_cast<float>(mousePos.x),static_cast<float>(mousePos.y),0}));
+
+        std::cout << "X: " << mousePos.x << " Y: " << mousePos.y << "\n";
+    }
+
+   
 
 }
 
@@ -151,15 +160,9 @@ GameState::GameState(int currentMapSize, ProgramState programState) : currentMap
     
     this->camera.zoom = 1.0f;
     this->programState = programState;
-    for (int i = 0; i < mapSizeMedium; i++){
 
-        for (int j = 0; j < mapSizeMedium; j++){
+    human.push_back(Human(programState.humanDefault, {static_cast<float>(0),static_cast<float>(0),0}));
 
-            human.push_back(Human(programState.humanDefault, {static_cast<float>(i),static_cast<float>(j),0}));
-        }
-    }
-    
-    
 
 }
 
@@ -173,9 +176,20 @@ void GameState::updateGame(){
    this->screenZero = GetScreenToWorld2D({0.0f, 0.0f}, this->camera);
 }
 
+bool compareHumans(const Human &a, const Human &b) {
+    // Compare based on x and y coordinates
+    if (a.position.y == b.position.y) {
+        return a.position.x < b.position.x;
+    }
+    return a.position.y < b.position.y;
+}
+
+
 void GameState::renderGame(){
     
     drawMap(this->programState.grassTexture, this->programState.waterTexture, this->currentMap.size, this->currentMap.mapArray, this->camera);
+
+    std::sort(this->human.begin(), this->human.end(), compareHumans); //Shit implementation
 
     for (Human &i : this->human){ //Human
         i.render(this->camera, this->screenZero, this->worldSize);
