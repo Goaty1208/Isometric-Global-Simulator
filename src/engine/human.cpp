@@ -9,7 +9,7 @@ Human::Human(Texture2D texture, Vector3 position){
     
     this->health = 100;
 
-    this->texture = texture;
+    this->texture = texture; //TODO: Change this horseshit
 
     for(int trait: traits){
 
